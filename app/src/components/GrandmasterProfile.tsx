@@ -25,7 +25,10 @@ const formatDate = (timestamp: number) => {
   return new Date(timestamp * 1000).toLocaleDateString();
 };
 
-const formatTimeSince = (diff: number) => {
+const getTimeSinceLastOnline = (lastOnline: number) => {
+    const now = Math.floor(Date.now() / 1000); // current time in seconds
+    const diff = now - lastOnline;
+
     const hours = String(Math.floor(diff / 3600)).padStart(2, "0");
     const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, "0");
     const seconds = String(diff % 60).padStart(2, "0");
@@ -57,9 +60,7 @@ const GrandmasterProfile = () => {
         if (!profile) return;
 
         const updateTime = () => {
-            const now = Math.floor(Date.now() / 1000); // current time in seconds
-            const diff = now - profile.last_online;
-            setTimeSince(formatTimeSince(diff));
+            setTimeSince(getTimeSinceLastOnline(profile.last_online));
         };
 
         updateTime(); // initial call
