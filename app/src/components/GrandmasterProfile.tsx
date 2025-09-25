@@ -25,10 +25,19 @@ const formatDate = (timestamp: number) => {
   return new Date(timestamp * 1000).toLocaleDateString();
 };
 
+const formatTimeSince = (diff: number) => {
+    const hours = String(Math.floor(diff / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, "0");
+    const seconds = String(diff % 60).padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}`
+}
+
 const GrandmasterProfile = () => {
     const { id } = useParams();
   
     const [profile, setProfile] = useState<Profile | null>(null)
+    const [timeSince, setTimeSince] = useState("00:00:00");
 
     const fetchProfile = async () => {
         try {
@@ -43,6 +52,21 @@ const GrandmasterProfile = () => {
     useEffect(() => {
         fetchProfile();
     }, [])
+
+    useEffect(() => {
+        if (!profile) return;
+
+        const updateTime = () => {
+            const now = Math.floor(Date.now() / 1000); // current time in seconds
+            const diff = now - profile.last_online;
+            setTimeSince(formatTimeSince(diff));
+        };
+
+        updateTime(); // initial call
+        const interval = setInterval(updateTime, 1000);
+
+        return () => clearInterval(interval);
+    }, [profile]);
 
     if (!profile) {
         return <p className="p-4 text-gray-500">Loading...</p>;
@@ -128,7 +152,7 @@ const GrandmasterProfile = () => {
                 </p>
                 <p>
                     <span className="font-semibold">Last Online:</span>{" "}
-                    {formatDate(profile.last_online)}
+                    {timeSince} ago
                 </p>
                 <p>
                     <span className="font-semibold">Verified:</span>{" "}
