@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 type Profile = {
-  "avatar": string,
+  "avatar"?: string,
   "profile_id": number,
   "@id": string,
   "url": string,
-  "name": string,
+  "name"?: string,
   "username": string,
-  "title": string;
-  "followers": number,
-  "country": string,
+  "title"?: string;
+  "followers"?: number,
+  "country"?: string,
   "last_online": number,
   "joined": number,
-  "status": string,
-  "is_streamer": boolean,
-  "verified": boolean,
-  "league": string,
-  "streaming_platforms": string[],
-  "code": number
+  "status"?: string,
+  "is_streamer"?: boolean,
+  "verified"?: boolean,
+  "league"?: string,
+  "streaming_platforms"?: string[],
+  "code"?: number // For checking if user exists
 }
 
 const formatDate = (timestamp: number) => {
